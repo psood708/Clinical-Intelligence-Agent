@@ -1,6 +1,6 @@
 """
 Verifier Agent — challenges extraction against retrieved similar cases.
-Model: Llama 3.3 70B via Ollama (local)
+Model: gemma4:e2b via Ollama (local, 7.2 GB)
 Input:  ClinicalExtraction + list of similar historical cases
 Output: VerificationResult with flags, corrections, and confidence delta
 
@@ -11,6 +11,7 @@ With verification (retrieval-grounded challenge):
 
 The Verifier works as a critic: it looks at what the Extractor claimed
 and asks "do the similar cases support this? Is anything missing?"
+Gemma4 is used here for its strong reasoning and instruction-following.
 """
 import logging
 from pydantic import BaseModel, Field

@@ -680,7 +680,7 @@
         <div class="agent-card agent-extractor">
           <div class="agent-number">01 · Extract</div>
           <div class="agent-name">Extractor</div>
-          <div class="agent-model">⚡ qwen2.5:14b · Ollama</div>
+          <div class="agent-model">⚡ qwen3.5:9b · Ollama</div>
           <div class="agent-desc">Structured clinical entity extraction. Outputs validated Pydantic schema: meds, conditions, labs, risk flags.</div>
           <div style="margin-top:8px"><span class="free-badge">local · $0</span></div>
         </div>
@@ -704,7 +704,7 @@
         <div class="agent-card agent-verifier">
           <div class="agent-number">03 · Verify</div>
           <div class="agent-name">Verifier</div>
-          <div class="agent-model">🧠 llama3.3:70b · Ollama</div>
+          <div class="agent-model">🧠 gemma4:e2b · Ollama</div>
           <div class="agent-desc">Challenges extraction vs retrieved evidence. Flags hallucinations. Triggers loop-back on critical issues.</div>
           <div style="margin-top:8px"><span class="free-badge">local · $0</span></div>
         </div>
@@ -715,7 +715,7 @@
         <div class="agent-card agent-synthesizer">
           <div class="agent-number">04 · Synthesize</div>
           <div class="agent-name">Synthesizer</div>
-          <div class="agent-model">🚀 llama3.3:70b · Groq</div>
+          <div class="agent-model">🚀 llama3.3-70b · Groq</div>
           <div class="agent-desc">Final clinical summary with source citations. Routes to Groq (315 tok/s) or falls back to local Ollama.</div>
           <div style="margin-top:8px"><span class="free-badge">groq free tier</span></div>
         </div>
@@ -845,7 +845,7 @@
       <div class="provider-pill">
         <div class="provider-dot dot-local"></div>
         <span class="provider-name">Ollama</span>
-        <span class="provider-desc">Unlimited · Local M5 · No egress</span>
+        <span class="provider-desc">qwen3.5:9b · gemma4:e2b · nomic-embed-text:v1.5</span>
       </div>
       <div class="provider-pill">
         <div class="provider-dot dot-groq"></div>

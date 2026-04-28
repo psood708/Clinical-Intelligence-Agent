@@ -40,7 +40,7 @@ Everything exposes as an **MCP server** — plug it into Claude Desktop, Cursor,
     ┌────────────────┼────────────────┐
     ▼                ▼                ▼                ▼
 EXTRACTOR        RETRIEVER        VERIFIER        SYNTHESIZER
-qwen2.5:14b     HNSW + BioBERT   llama3.3:70b    llama3.3:70b
+qwen3.5:9b      HNSW + BioBERT   gemma4:e2b      llama-3.3-70b
 Ollama (local)  + Cohere Rerank  Ollama (local)  Groq (free tier)
     │                │                │                │
     └────────────────┴────────────────┘                │
@@ -62,11 +62,13 @@ This system runs at **$0/month** on the following free tiers:
 
 | Provider | Model | Free Limit | Used For |
 |---|---|---|---|
-| [Ollama](https://ollama.com) | qwen2.5:14b, llama3.3:70b | Unlimited (local) | Extraction, Verification |
+| [Ollama](https://ollama.com) | qwen3.5:9b (6.6 GB) | Unlimited (local) | Extraction |
+| [Ollama](https://ollama.com) | gemma4:e2b (7.2 GB) | Unlimited (local) | Verification + Synthesis fallback |
+| [Ollama](https://ollama.com) | nomic-embed-text:v1.5 | Unlimited (local) | Embeddings fallback |
 | [Groq](https://console.groq.com) | llama-3.3-70b-versatile | ~500K tok/day | Synthesis (315 tok/s) |
 | [Cohere](https://dashboard.cohere.com) | rerank-english-v3.0 | 1K req/month | Reranking |
 | [Cerebras](https://cloud.cerebras.ai) | llama3.3-70b | 1M tok/day | Batch evals |
-| [HuggingFace](https://huggingface.co) | dmis-lab/biobert-v1.1 | Free model hub | Embeddings |
+| [HuggingFace](https://huggingface.co) | dmis-lab/biobert-v1.1 | Free model hub | Primary embeddings |
 
 > **Privacy mode**: Set `ROUTING_STRATEGY=privacy_first` in `.env` to run entirely on local Ollama. No data leaves your machine. Suitable for environments with PHI sensitivity.
 
@@ -129,17 +131,14 @@ pip install -e ".[dev]"
 ### 2. Pull local models
 
 ```bash
-# Extractor (~8GB) — structured extraction
-ollama pull qwen2.5:14b
+# You already have these — verify they're present
+ollama list
 
-# Verifier + Synthesizer fallback (~42GB) — requires 36GB+ RAM
-ollama pull llama3.3:70b
-
-# Embeddings (~300MB)
-ollama pull nomic-embed-text
+# Expected output:
+# qwen3.5:9b        6.6 GB   ← Extractor
+# gemma4:e2b        7.2 GB   ← Verifier + Synthesis fallback
+# nomic-embed-text:v1.5      ← Embedding fallback
 ```
-
-> **Lower RAM option**: Replace `llama3.3:70b` with `llama3.1:8b` in `.env`. Quality drops but it runs on 16GB.
 
 ### 3. Configure environment
 
@@ -256,8 +255,8 @@ pytest tests/ -v
 
 ## Design Decisions
 
-**Why Qwen2.5:14b for extraction, not a 70B model?**
-Extraction is a narrow structured-output task. Qwen2.5:14b consistently outperforms 70B models on JSON extraction because it's been fine-tuned specifically for this. Using it saves ~3× inference time per document.
+**Why qwen3.5:9b for extraction, not a larger model?**
+Extraction is a narrow structured-output task. Qwen3 series is specifically strong at JSON structured output — the 9B model consistently outperforms larger generic models on this task. At 6.6 GB it runs fast on M-series Mac with zero PHI egress.
 
 **Why BioBERT embeddings instead of generic ones?**
 BioBERT is pretrained on PubMed + clinical notes. It understands that "MI" and "myocardial infarction" are the same concept, and that "beta-blocker" and "metoprolol" are related. Generic embeddings miss these clinical semantics.

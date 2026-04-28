@@ -1,13 +1,13 @@
 """
 Extractor Agent — structured clinical entity extraction.
-Model: Qwen2.5:14b via Ollama (local, free, fast)
+Model: qwen3.5:9b via Ollama (local, free, fast)
 Input:  Raw clinical text (notes, discharge summaries, referrals)
 Output: Validated ClinicalExtraction Pydantic model
 
-Design decision: Use a 14B quantised model here rather than a 70B because:
-1. Extraction is a narrow, well-defined structured output task
-2. Qwen2.5 14B consistently outperforms larger models on JSON extraction
-3. Local → zero latency from API calls, zero PHI egress
+Design decision: Use qwen3.5:9b for extraction because:
+1. Extraction is a narrow, well-defined structured output task — 9B is enough
+2. Qwen3 series is specifically strong at structured JSON output
+3. At 6.6 GB it runs fast on M-series Mac, zero PHI egress
 """
 import json
 import logging

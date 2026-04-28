@@ -17,9 +17,10 @@ class RoutingStrategy(str, Enum):
 class Settings(BaseSettings):
     # ── Ollama ────────────────────────────────
     ollama_base_url: str = "http://localhost:11434"
-    ollama_extractor_model: str = "qwen2.5:14b"
-    ollama_verifier_model: str = "llama3.3:70b"
-    ollama_embedding_model: str = "nomic-embed-text"
+    ollama_extractor_model: str = "qwen3.5:9b"
+    ollama_verifier_model: str = "gemma4:e2b"
+    ollama_synthesizer_model: str = "gemma4:e2b"
+    ollama_embedding_model: str = "nomic-embed-text:v1.5"
 
     # ── Free hosted APIs ──────────────────────
     groq_api_key: str = ""
@@ -54,7 +55,7 @@ class Settings(BaseSettings):
     langfuse_secret_key: str = ""
 
     # ── Evaluation ────────────────────────────
-    eval_judge_model: str = "ollama/llama3.3:70b"
+    eval_judge_model: str = "ollama/gemma4:e2b"
     eval_dataset_path: str = "data/eval/gold_standard.json"
     eval_batch_size: int = 10
 

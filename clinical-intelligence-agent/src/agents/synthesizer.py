@@ -1,12 +1,13 @@
 """
 Synthesizer Agent — final clinical summary with source citations.
-Model: Llama 3.3 70B via Groq (free: ~500K tokens/day, 315 tok/s)
-Fallback: Llama 3.3 70B via Ollama (local, unlimited, slower)
+Model: llama-3.3-70b-versatile via Groq (free: ~500K tokens/day, 315 tok/s)
+Fallback: gemma4:e2b via Ollama (local, unlimited, slower)
 
 Why Groq here specifically:
-- Groq runs at 315 tokens/second — synthesis step goes from 8s → <1s
+- Groq runs at 315 tokens/second — synthesis step goes from ~6s → <1s
 - This is the user-facing output so quality + speed both matter
 - Groq's free tier is more than enough for portfolio-scale usage
+- gemma4:e2b is the local fallback when Groq key is missing or rate-limited
 """
 import logging
 from pydantic import BaseModel
@@ -136,7 +137,7 @@ class SynthesizerAgent:
         verification: VerificationResult,
     ) -> ClinicalSummary:
         response = self._ollama.chat(
-            model=settings.ollama_verifier_model,  # Reuse 70B for synthesis
+            model=settings.ollama_synthesizer_model,  # gemma4:e2b
             messages=[
                 {"role": "system", "content": SYNTHESIZER_SYSTEM},
                 {"role": "user", "content": prompt},
